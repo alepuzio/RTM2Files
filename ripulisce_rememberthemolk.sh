@@ -15,11 +15,18 @@ grep -v \"date_due\" ./partial/tmp_rememberthemilk_a_capo.json > ./partial/tmp_r
 
 # TODO spostare
 # spostare i task con tag:progetto in un file specifico da caricare
-grep "progetto" ./partial/tmp_rememberthemilk_senza_calendario.json > rtm_solo_progetti.txt
-grep -v "progetto" ./partial/tmp_rememberthemilk_senza_calendario.json > ./partial/tmp_rememberthemilk_senza_progetti.json
+grep "progetto" ./partial/tmp_rememberthemilk_senza_calendario.json > ./partial/rtm_progetti_tmp.txt
+awk -F \"name\":  '{print $2 }'      ./partial/rtm_progetti_tmp.txt > ./partial/rtm_progetto_nome_tmp.txt
+awk -F \"priority\":  '{print $1 }'  ./partial/rtm_progetto_nome_tmp.txt >  ./partial/rtm_progetto_nome.txt
+#TODO puo' esserci \"tag:Aabcfd\"
+awk -F \"tags\": '{print $2 }'       ./partial/rtm_progetto_nome_tmp.txt >  ./partial/rtm_progetto_tag.txt
+
+paste  ./partial/rtm_progetto_nome.txt  ./partial/rtm_progetto_tag.txt | column -s $';\t' -t > rtm_progetto.txt
+
+
 
 # spostare le note di archivio in un file specifico da caricare
-#testo
+grep -v "progetto" ./partial/tmp_rememberthemilk_senza_calendario.json > ./partial/tmp_rememberthemilk_senza_progetti.json
 grep "archivio_evernote" ./partial/tmp_rememberthemilk_senza_progetti.json > ./partial/rtm_archivio_note_tmp.txt
 awk -F \"name\":  '{print $2 }'      ./partial/rtm_archivio_note_tmp.txt > ./partial/rtm_archivio_note_nome_tmp.txt
 awk -F \"priority\":  '{print $1 }'  ./partial/rtm_archivio_note_nome_tmp.txt >  ./partial/rtm_archivio_note_nome.txt
@@ -45,8 +52,20 @@ grep -v  "archivio_diigo" ./partial/tmp_rememberthemilk_senza_archivio_note.json
 # spostare i task con le varie 
 cp ./partial/tmp_rememberthemilk_senza_archivio_link.json  ./partial/tmp_rememberthemilk_solo_azioni.json
 
-array_position=(1339734 )
+#declare -A array=([sem1,0]="first name" [sem1,1]="second name" [sem2,0]="third name" [sem3,0]="foo bar")
+declare -A array_position
+array_position["1339734"]="youtube"
 # 1368077 
+array_position["1368077"]="casa-milano"
+array_position["1378628"]="boh1"
+array_position["1368633"]="computer"
+array_position["1368634"]="telefono"
+array_position["1368636"]="stampante"
+array_position["1382160"]="citta_milano"
+array_position["1382163"]="sesto_san_giovanni"
+array_position["1368632"]="mail"
+array_position["1382675"]="segrate_novegro"
+array_position["1403887"]="pc_lavoro"
 # 1368628 
 # 1368632 
 # 1368633 
@@ -59,11 +78,9 @@ array_position=(1339734 )
 # )
 
 
-array_priority=(P1)
-#    P2 P3 PN)
+array_priority=(P1  P2 P3 PN)
 
-array_time=(0M )
-    #10M 12H 15M 1H 20M 2H 2M 30M 3H 45M 5M 6H)
+array_time=(0M 10M 12H 15M 1H 20M 2H 2M 30M 3H 45M 5M 6H)
 
 for priority in "${array_priority[@]}"
 do
@@ -81,16 +98,21 @@ do
 		paste ./partial/rtm-$priority-$position-$time-only-name.txt ./partial/rtm-$priority-$position-$time-tag.txt | column -s $'\t' -t > rtm-$priority-$position-$time-task.txt
 
 		
-#		rm ./partial/rtm-$priority-$position-$time.txt
-#		rm ./partial/rtm-$priority-$position-$time-tmp.txt
-#		rm ./partial/rtm-$priority-$position-$time-tag.txt
-#		rm ./partial/rtm-$priority-$position-$time-only-name.txt
-#	        rm rtm-$priority.txt	
+		rm ./partial/rtm-$priority-$position-$time.txt
+		rm ./partial/rtm-$priority-$position-$time-tmp.txt
+		rm ./partial/rtm-$priority-$position-$time-tag.txt
+		rm ./partial/rtm-$priority-$position-$time-only-name.txt
+#	        rm ./partial/rtm-$priority.txt	
 	    done # time
 	done # position
 done #priority
 
-
+i = 0
+for position in "${array_position[@]}"
+do
+	grep -v $position ./partial/tmp_rememberthemilk_solo_azioni.json > ./output/scarto_$i_esimo.txt
+	$i = $i+1
+done
 #delete empty files
 find . -size 0 -print -delete
 #delete partial files
