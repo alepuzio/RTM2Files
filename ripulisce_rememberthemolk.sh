@@ -21,8 +21,7 @@ awk -F \"priority\":  '{print $1 }'  ./partial/rtm_progetto_nome_tmp.txt >  ./pa
 #TODO puo' esserci \"tag:Aabcfd\"
 awk -F \"tags\": '{print $2 }'       ./partial/rtm_progetto_nome_tmp.txt >  ./partial/rtm_progetto_tag.txt
 
-paste  ./partial/rtm_progetto_nome.txt  ./partial/rtm_progetto_tag.txt | column -s $';\t' -t > rtm_progetto.txt
-
+paste  ./partial/rtm_progetto_nome.txt  ./partial/rtm_progetto_tag.txt | column -s $';\t' -t > ./output/rtm_progetto.txt
 
 
 # spostare le note di archivio in un file specifico da caricare
@@ -33,7 +32,7 @@ awk -F \"priority\":  '{print $1 }'  ./partial/rtm_archivio_note_nome_tmp.txt > 
 #TODO puo' esserci \"tag:Aabcfd\"
 awk -F \"tags\": '{print $2 }'       ./partial/rtm_archivio_note_nome_tmp.txt >  ./partial/rtm_archivio_note_tag.txt
 
-paste  ./partial/rtm_archivio_note_nome.txt  ./partial/rtm_archivio_note_tag.txt | column -s $';\t' -t > rtm_archivio_note.txt
+paste  ./partial/rtm_archivio_note_nome.txt  ./partial/rtm_archivio_note_tag.txt | column -s $';\t' -t > ./output/rtm_archivio_note.txt
 
 # link
 grep -v "archivio_evernote" ./partial/tmp_rememberthemilk_senza_progetti.json > ./partial/tmp_rememberthemilk_senza_archivio_note.json
@@ -43,7 +42,7 @@ awk -F \"name\":  '{print $2 }'      ./partial/rtm_archivio_link_tmp.txt >      
 awk -F \"priority\":  '{print $1 }'  ./partial/rtm_archivio_link_nome_tmp.txt > ./partial/rtm_archivio_link_nome.txt
 awk -F \"tags\": '{print $2 }'       ./partial/rtm_archivio_link_nome_tmp.txt >     ./partial/rtm_archivio_link_tag.txt
 
-paste ./partial/rtm_archivio_link_nome.txt  ./partial/rtm_archivio_link_tag.txt | column -s $';\t' -t > rtm_archivio_link.txt
+paste ./partial/rtm_archivio_link_nome.txt  ./partial/rtm_archivio_link_tag.txt | column -s $';\t' -t > ./output/rtm_archivio_link.txt
 
 grep -v  "archivio_diigo" ./partial/tmp_rememberthemilk_senza_archivio_note.json > ./partial/tmp_rememberthemilk_senza_archivio_link.json
 
@@ -66,16 +65,6 @@ array_position["1382163"]="sesto_san_giovanni"
 array_position["1368632"]="mail"
 array_position["1382675"]="segrate_novegro"
 array_position["1403887"]="pc_lavoro"
-# 1368628 
-# 1368632 
-# 1368633 
-# 1368634 
-# 1368636 
-# 1382160 
-# 1382163 
-# 1382675 
-# 1403887
-# )
 
 
 array_priority=(P1  P2 P3 PN)
@@ -95,7 +84,7 @@ do
 		awk -F '\"name\":'  '{print $2 }' ./partial/rtm-$priority-$position-$time.txt > ./partial/rtm-$priority-$position-$time-tmp.txt
 		awk -F '\"priority\"' '{print $1}' ./partial/rtm-$priority-$position-$time-tmp.txt > ./partial/rtm-$priority-$position-$time-only-name.txt
 		awk -F '"tags":' '{print $2 }' ./partial/rtm-$priority-$position-$time-tmp.txt > ./partial/rtm-$priority-$position-$time-tag.txt
-		paste ./partial/rtm-$priority-$position-$time-only-name.txt ./partial/rtm-$priority-$position-$time-tag.txt | column -s $'\t' -t > rtm-$priority-$position-$time-task.txt
+		paste ./partial/rtm-$priority-$position-$time-only-name.txt ./partial/rtm-$priority-$position-$time-tag.txt | column -s $'\t' -t > ./output/rtm-$priority-$position-$time-task.txt
 
 		
 		rm ./partial/rtm-$priority-$position-$time.txt
